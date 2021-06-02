@@ -7,7 +7,7 @@ const options = {
         webPort: 8002
     },
     throttle: 10000,
-    forceProxyHttps: false,
+    forceProxyHttps: true,
     wsIntercept: false,
     silent: false
 };

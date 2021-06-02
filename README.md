@@ -15,5 +15,10 @@ Testando modulo AnyProxy
 }
 Laisson`
 
+`curl --insecure 'https://www.facebook.com/' -x http://127.0.0.1:8001`
+ - Expected:
+ `<script>window.navigator.teste = "laisson"</script>` após o `<head>`
+ ![Result](face_html.png)
+
 ## doc
 https://anyproxy.io/
