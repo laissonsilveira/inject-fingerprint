@@ -8,10 +8,7 @@ module.exports = {
                 const myScript = '<script>window.navigator.teste = "laisson"</script>';
                 newResponse.body = Buffer.from(body.toString().replace('<head>', `<head>${myScript}`));
             }
-        } else {
-            if (newResponse.body)
-                newResponse.body += 'Laisson';
-        }
+        } 
         return new Promise((resolve, reject) => {
             resolve({ response: newResponse });
         });
