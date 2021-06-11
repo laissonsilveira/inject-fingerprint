@@ -4,7 +4,8 @@
     "description": "Testando modulo AnyProxy",
     "main": "server.js",
     "dependencies": {
-        "anyproxy": "^4.1.3"
+        "anyproxy": "^4.1.3",
+        "https-proxy-agent": "^5.0.0"
     },
     "devDependencies": {
         "nodemon": "^2.0.7"
