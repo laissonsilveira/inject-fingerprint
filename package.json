@@ -3,7 +3,6 @@
     "version": "1.0.0",
     "description": "Create Internal proxy to inject fingerprint",
     "main": "index.js",
-    "private": "false",
     "dependencies": {
         "anyproxy": "^4.1.3",
         "https-proxy-agent": "^5.0.0",
