@@ -17,7 +17,12 @@
         "selenium-webdriver": "^4.0.0-beta.4"
     },
     "scripts": {
-        "test": "node_modules/mocha/bin/mocha test/fingerprint.test.js --timeout 999999"
+        "test": "node_modules/mocha/bin/mocha test/fingerprint.test.js --timeout 999999",
+        "preversion": "npm test && git add .",
+        "publish-patch": "npm version patch && npm publish",
+        "publish-minor": "npm version minor && npm publish",
+        "publish-major": "npm version major && npm publish",
+        "postpublish": "git push"
     },
     "repository": {
         "type": "git",
@@ -25,14 +30,19 @@
     },
     "keywords": [
         "Proxy",
-        "NodeJS"
+        "NodeJS",
+        "Fingerprint",
+        "Chrome",
+        "Crawler",
+        "WebDriver",
+        "Browser"
     ],
     "author": {
         "name": "Laisson R. Silveira",
         "email": "laisson.r.silveira@gmail.com",
         "url": "https://laissonsilveira.github.io"
     },
-    "license": "UNLICENSED",
+    "license": "MIT",
     "bugs": {
         "url": "https://github.com/laissonsilveira/inject-fingerprint/issues"
     },
