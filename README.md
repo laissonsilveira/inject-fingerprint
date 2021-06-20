@@ -1,36 +1,84 @@
-# proxy-with-nodejs
-Testando modulo AnyProxy
+# inject-fingerprint
 
-## install
-`npm i`
+Inject fingerprint with proxy
 
-## run
-`npm start`
+## Install
 
-### Error/Solutions
+```
+npm install
+```
 
-Caso receba a mensagem abaixo significa que é preciso instalar o certificado: 
-*throw new Error('root CA not found. Please run `anyproxy-ca` to generate one first.');*
+## Usage
 
-A instalação do certificado é feita utilizando o 'anyproxy'. Siga os paços a seguir:
-Verifique se 'anyproxy' está instalado com o mando 
-$ 'anyproxy --version'
+```js
+const InjectFingerprint = require('inject-fingerprint');
+const ProxyServer = new InjectFingerprint();
+// To start proxy
+ProxyServer.start();
+// To close proxy
+ProxyServer.close();
+```
 
-Se não estiver, instale com o comando:
-$ sudo npm install -g anyproxy
+## API
 
-E crie o certificado com o comando:
-$ anyproxy-ca
+### InjectFingerprint(options?)
 
-Será perguntado: '? Would you like to generate one ?', responda com 'Yes'
+Create Internal proxy to inject fingerprint
 
-Após a instalação do certificado o ao executar o comando 'npm start' o erro não deverá ocorrer.
+#### options
 
-## test
-`curl --insecure 'https://www.facebook.com/' -x http://127.0.0.1:8001`
- - Expected:
- `<script>window.navigator.teste = "laisson"</script>` após o `<head>`
- ![Result](face_html.png)
+Type: `object`
 
-## doc
-https://anyproxy.io/
+##### internalProxyPort
+
+Type: `number`\
+Default: `9333`
+
+Internal Proxy Port
+
+##### internalProxyWebPort
+
+Type: `number`\
+Default: `9334`
+
+Internal Proxy Web Interface Port
+
+##### additionalProxyPort
+
+Type: `number`\
+Default: `9335`
+
+Additional Proxy Port when exist external proxy
+
+##### additionalProxyWebPort
+
+Type: `number`\
+Default: `9336`
+
+Additional Proxy Web Interface Port when exist external proxy
+
+##### externalProxy
+
+Type: `string`
+
+External proxy. Ex: `http://host:port`
+
+##### fingerPrintPath
+
+Type: `string`\
+Default: `/tmp`
+
+Path to save fingerprint file.
+
+**Note:** The name of file is `default`, you can change the script if you want. If file exist, it is loaded, else created.
+
+##### silent
+
+Type: `boolean`\
+Default: `true`
+
+Is verbose proxy log
+
+## Proxy documentation
+
+<https://anyproxy.io/>
