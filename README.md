@@ -1,3 +1,5 @@
+[![Node.js CI - TESTS](https://github.com/laissonsilveira/inject-fingerprint/actions/workflows/node.js.yml/badge.svg?branch=main)](https://github.com/laissonsilveira/inject-fingerprint/actions/workflows/node.js.yml)
+
 # inject-fingerprint
 
 Inject fingerprint with proxy.
