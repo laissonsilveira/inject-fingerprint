@@ -1,5 +1,4 @@
 /*eslint require-yield: off*/
-const LOGGER = require('./logger');
 const { loadFingerPrint } = require('./finger-print-builder');
 
 module.exports = directory => {
@@ -16,7 +15,7 @@ module.exports = directory => {
                 if (bodyStr?.includes('<head>'))
                     newResponse.body = Buffer.from(bodyStr.replace('<head>', `<head>${fingerPrintScript}`));
                 else
-                    LOGGER.silly(`[inject-finger-print] Não foi encontrado a tag <head> para injetar os scripts na resposta da URL: '${requestDetail?.url}'`);
+                    __LOGGER_FINGERPRINT.silly(`[inject-finger-print] Could not find <head> tag to inject scripts in URL response: '${requestDetail?.url}'`);
             }
             return new Promise((resolve) => {
                 resolve({ response: newResponse });

@@ -1,4 +1,3 @@
-const LOGGER = require('./logger');
 const { join } = require('path');
 const { writeFile, existsSync, readFileSync } = require('fs');
 
@@ -132,13 +131,12 @@ const getFingerPrintPath = (name, outDir) => {
 
 const loadFingerPrint = function (name, outDir) {
     const fingerPrintPath = getFingerPrintPath(name, outDir);
-    LOGGER.info(`[finger-print-builder.js] Carregando o arquivo de fringerprint '${fingerPrintPath}' para regra do proxy`);
+    __LOGGER_FINGERPRINT.info(`[finger-print-builder.js] Loading fingerprint file '${fingerPrintPath}' for proxy rule`);
     if (existsSync(fingerPrintPath)) {
         try {
             return readFileSync(fingerPrintPath, 'utf8');
         } catch (err) {
-            LOGGER.error(`[finger-print-builder.js] Erro ao ler o conteudo do arquivo: '${fingerPrintPath}'
-            stack: ` + err);
+            __LOGGER_FINGERPRINT.error(`[finger-print-builder.js] Error reading file contents: '${fingerPrintPath}' - ${err?.message}`);
         }
     }
     return createFingerPrint(fingerPrintPath);
@@ -148,8 +146,8 @@ const createFingerPrint = (fingerPrintPath) => {
     const fingerPrintScript = createFingerPrintScript();
     writeFile(fingerPrintPath, fingerPrintScript, function (err) {
         if (err)
-            return LOGGER.error(`[finger-print-builder.js] Erro ao criar o arquivo de fingerprint '${fingerPrintPath}' - ` + err);
-        LOGGER.info(`[finger-print-builder.js] O arquivo '${fingerPrintPath}' foi salvo com sucesso!`);
+            return __LOGGER_FINGERPRINT.error(`[finger-print-builder.js] Error creating fingerprint file '${fingerPrintPath}' - ${err?.message}`);
+        __LOGGER_FINGERPRINT.info(`[finger-print-builder.js] The file '${fingerPrintPath}' was successfully saved!`);
     });
     return fingerPrintScript;
 };

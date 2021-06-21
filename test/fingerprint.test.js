@@ -3,8 +3,7 @@ const { writeFileSync } = require('fs');
 const { join } = require('path');
 const { expect } = require('chai');
 const { By, until } = require('selenium-webdriver');
-const LOGGER = require('../logger');
-const ProxyServer = new (require('../index'))();
+const ProxyServer = new (require('../index'))({ logLevel: 'silly' });
 let driver;
 
 describe('Teste de validação de aplicação de fingerprint em página', async () => {
@@ -20,8 +19,8 @@ describe('Teste de validação de aplicação de fingerprint em página', async 
 
     it('Roda testes de fingerprint em página de teste e valida resultados', async () => {
         await driver.get('https://bot.sannysoft.com/');
-        await driver.wait(until.elementLocated(By.xpath('//*[@id="fp2"]')), 1000);
-        await new Screenshot(driver).take('test/screenshot');
+        await driver.wait(until.elementLocated(By.xpath('//*[@id="fp2"]')), 10000);
+        await new Screenshot(driver).take('test');
         const tables = await driver.findElements(By.css('table'));
         await oldFingerPrintValidate(tables);
         await newFingerPrintValidate(tables);
@@ -90,10 +89,10 @@ class Screenshot {
             const image = await this.driver.takeScreenshot();
             const fileName = moment().format('YYYY-MM-DD_HH-mm-ss') + '.png';
             writeFileSync(join(path, fileName), image.replace(/^data:image\/png;base64,/, ''), 'base64');
-            LOGGER.info(`[screenshot] Screenshot => '${fileName}'`);
+            __LOGGER_FINGERPRINT.info(`[screenshot] Screenshot => '${fileName}'`);
             return fileName;
         } catch (err) {
-            LOGGER.warn('[screenshot] Não foi possível salvar screenshot: ' + err.message);
+            __LOGGER_FINGERPRINT.warn('[screenshot] Não foi possível salvar screenshot: ' + err.message);
         }
     }
 

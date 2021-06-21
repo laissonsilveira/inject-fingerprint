@@ -104,4 +104,4 @@ dist
 .tern-port
 
 .history
-test/screenshot/
+test/*.png

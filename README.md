@@ -83,11 +83,63 @@ Path to save fingerprint file.
 Type: `boolean`\
 Default: `true`
 
-Is verbose proxy log
+If `anyproxy` module log is verbose
+
+##### logLevel
+
+Type: `string`\
+Default: `null`
+
+Level log of module `inject-fingerprint`. To logging action Ex: [silly, debug, warn, error, info, etc]
+
+**Note:** Winston levels. To log something enter a level.
+
+### start()
+
+Start the proxy
+
+### close()
+
+Close the proxy
+
+### DriverBuilder(options?)
+
+Create and return new web driver
+
+##### browser
+
+Type: `string`\
+Default: `chrome`
+
+Browser name. Ex: `chrome`
+
+**Note:** today only works with chrome
+
+##### headless
+
+Type: `boolean`\
+Default: `true`
+
+If the init browser in headless mode. Ex: `true|false`
+
+##### browserLanguage
+
+Type: `string`\
+Default: `en-US`
+
+Browser Language. <https://developer.mozilla.org/pt-BR/docs/Web/API/NavigatorLanguage>
+
+##### browserUserAgent
+
+Type: `string`\
+Default: `Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.72 Safari/537.36]`
+
+Browser User Agent. <https://developer.mozilla.org/pt-BR/docs/Web/HTTP/Headers/User-Agent>
+
 
 ## Test
 
-`npm test` exec `test/fingerprint.test.js` file and this test open chrome browser mode headless and verify if is robo by test on the site <https://bot.sannysoft.com/>
+`npm test` call the `test/fingerprint.test.js` file and this test open chrome browser mode headless and verify if is robot by test on the site <https://bot.sannysoft.com/>
 
 ## Proxy documentation
 

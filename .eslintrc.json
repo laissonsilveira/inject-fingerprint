@@ -36,6 +36,6 @@
         ]
     },
     "globals": {
-        "__CONFIG": true
+        "__LOGGER_FINGERPRINT": true
     }
 }

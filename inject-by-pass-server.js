@@ -3,9 +3,9 @@ const HttpsProxyAgent = require('https-proxy-agent');
 
 module.exports = externalProxy => {
     return {
-        summary: 'Redireciona para o servidor de proxy',
+        summary: 'Redirects to proxy server',
         *beforeSendRequest(requestDetail) {
-            if (!__CONFIG.proxy.server) {
+            if (!externalProxy) {
                 return requestDetail;
             }
 
