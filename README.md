@@ -1,6 +1,12 @@
 # inject-fingerprint
 
-Inject fingerprint with proxy
+Inject fingerprint with proxy.
+
+> Fingerprint (device fingerprint) is a set of techniques that allow a website to uniquely identify your computer.
+>
+> Calculating a device's fingerprint begins when a user visits a website. The device fingerprint tracker collects all relevant information (version / browser type, OS, etc.). The interaction triggers the collection of a range of data (like the one listed above) that forms a special "hash" assigned to that specific device.
+>
+> This page tells you how identifiable your browser is as a robot: <https://bot.sannysoft.com/> and this module makes the tests on this page succeed on your chrome headless. See [test](#test)
 
 ## Install
 
@@ -78,6 +84,10 @@ Type: `boolean`\
 Default: `true`
 
 Is verbose proxy log
+
+## Test
+
+`npm test` exec `test/fingerprint.test.js` file and this test open chrome browser mode headless and verify if is robo by test on the site <https://bot.sannysoft.com/>
 
 ## Proxy documentation
 
