@@ -136,7 +136,7 @@ const loadFingerPrint = function (name, outDir) {
         try {
             return readFileSync(fingerPrintPath, 'utf8');
         } catch (err) {
-            __LOGGER_FINGERPRINT.error(`[finger-print-builder.js] Error reading file contents: '${fingerPrintPath}' - ${err?.message}`);
+            __LOGGER_FINGERPRINT.error(`[finger-print-builder.js] Error reading file contents: '${fingerPrintPath}' - ${err && err.message}`);
         }
     }
     return createFingerPrint(fingerPrintPath);
@@ -146,7 +146,7 @@ const createFingerPrint = (fingerPrintPath) => {
     const fingerPrintScript = createFingerPrintScript();
     writeFile(fingerPrintPath, fingerPrintScript, function (err) {
         if (err)
-            return __LOGGER_FINGERPRINT.error(`[finger-print-builder.js] Error creating fingerprint file '${fingerPrintPath}' - ${err?.message}`);
+            return __LOGGER_FINGERPRINT.error(`[finger-print-builder.js] Error creating fingerprint file '${fingerPrintPath}' - ${err && err.message}`);
         __LOGGER_FINGERPRINT.info(`[finger-print-builder.js] The file '${fingerPrintPath}' was successfully saved!`);
     });
     return fingerPrintScript;

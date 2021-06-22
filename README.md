@@ -1,4 +1,7 @@
 [![Node.js CI - TESTS](https://github.com/laissonsilveira/inject-fingerprint/actions/workflows/node.js.yml/badge.svg?branch=main)](https://github.com/laissonsilveira/inject-fingerprint/actions/workflows/node.js.yml)
+![GitHub package.json version](https://img.shields.io/github/package-json/v/laissonsilveira/inject-fingerprint)
+![node-current](https://img.shields.io/node/v/inject-fingerprint)
+[![Downloads](https://img.shields.io/npm/dm/inject-fingerprint.svg)](https://npmjs.com/inject-fingerprint)
 
 # inject-fingerprint
 

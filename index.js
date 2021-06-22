@@ -46,8 +46,8 @@ class ProxyServer {
 
     close() {
         __LOGGER_FINGERPRINT.info('[proxy-server] Terminating internal proxies');
-        internalProxy?.close();
-        additionalProxy?.close();
+        internalProxy && internalProxy.close();
+        additionalProxy && additionalProxy.close();
     }
 
     /**

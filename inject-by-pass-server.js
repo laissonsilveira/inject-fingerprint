@@ -17,7 +17,7 @@ module.exports = externalProxy => {
             }
 
             if (requestDetail.protocol == 'http') {
-                const [address, port] = externalProxy?.split(':');
+                const [address, port] = externalProxy && externalProxy.split(':') || [];
                 const newRequestOptions = requestDetail.requestOptions;
                 newRequestOptions.path = requestDetail.url;
                 newRequestOptions.hostname = address;
