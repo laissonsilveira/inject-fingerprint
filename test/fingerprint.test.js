@@ -1,4 +1,3 @@
-const moment = require('moment');
 const { writeFileSync } = require('fs');
 const { join } = require('path');
 const { expect } = require('chai');
@@ -87,7 +86,7 @@ class Screenshot {
         try {
             await this._setBackground();
             const image = await this.driver.takeScreenshot();
-            const fileName = moment().format('YYYY-MM-DD_HH-mm-ss') + '.png';
+            const fileName = Date.now() + '.png';
             writeFileSync(join(path, fileName), image.replace(/^data:image\/png;base64,/, ''), 'base64');
             __LOGGER_FINGERPRINT.info(`[screenshot] Screenshot => '${fileName}'`);
             return fileName;
