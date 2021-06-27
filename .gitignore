@@ -105,4 +105,3 @@ dist
 
 .history
 test/*.png
-package-lock.json
