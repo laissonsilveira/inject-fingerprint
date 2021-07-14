@@ -1,5 +1,8 @@
+const moment = require('moment');
 const AnyProxy = require('anyproxy');
 let internalProxy, additionalProxy;
+const { join } = require('path');
+const { existsSync, readdirSync, statSync, unlinkSync, rmdirSync } = require('fs');
 
 class ProxyServer {
 
@@ -26,8 +29,12 @@ class ProxyServer {
         };
         this.options = Object.assign(defaultOptions, options);
         global.__LOGGER_FINGERPRINT = require('./lib/logger')(this.options.logLevel);
+        this._CACHE_PATH = '/tmp/anyproxy/cache';
     }
 
+    /**
+     * Start proxy server
+     */
     start() {
         if (!AnyProxy.utils.certMgr.ifRootCAFileExists()) {
             AnyProxy.utils.certMgr.generateRootCA((error, keyPath) => {
@@ -44,10 +51,47 @@ class ProxyServer {
         }
     }
 
+    /**
+     * Terminate the proxy server
+     */
     close() {
         __LOGGER_FINGERPRINT.info('[proxy-server] Terminating internal proxies');
         internalProxy && internalProxy.close();
         additionalProxy && additionalProxy.close();
+    }
+
+    /**
+     *
+     * @param {Number} [amount=1] Amount of time to delete
+     * @param {String} [keyTime='days'] Key of what time to delete (https://momentjs.com/docs/#/manipulating/add/)
+     * @example clearCache(30, 'minutes')
+     */
+    clearCache(amount = 1, keyTime = 'days') {
+        const rimraf = (dirPath) => {
+            if (existsSync(dirPath)) {
+                __LOGGER_FINGERPRINT.debug('[proxy-server] Removing old caches...');
+                try {
+                    const itens = readdirSync(dirPath);
+                    itens.forEach(file => {
+                        const entryPath = join(dirPath, file);
+                        const stat = statSync(entryPath);
+                        if (moment() > moment(stat.ctime).add(amount, keyTime)) {
+                            if (stat.isDirectory())
+                                rimraf(entryPath);
+                            else
+                                unlinkSync(entryPath);
+                        }
+                    });
+                    if (!readdirSync(dirPath).length)
+                        rmdirSync(dirPath);
+                } catch (error) {
+                    __LOGGER_FINGERPRINT.warn(`[proxy-server] Unable to remove old caches: ${error && error.message}`);
+                }
+            } else {
+                __LOGGER_FINGERPRINT.debug('[proxy-server] No cache was found');
+            }
+        };
+        rimraf(this._CACHE_PATH);
     }
 
     /**
