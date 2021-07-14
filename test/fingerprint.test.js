@@ -1,11 +1,11 @@
-const { writeFileSync } = require('fs');
+const { writeFileSync, existsSync } = require('fs');
 const { join } = require('path');
 const { expect } = require('chai');
 const { By, until } = require('selenium-webdriver');
 const ProxyServer = new (require('../index'))({ logLevel: 'silly' });
 let driver;
 
-describe('Teste de validação de aplicação de fingerprint em página', async () => {
+describe('Page fingerprint application validation test', async () => {
 
     before(() => {
         ProxyServer.start();
@@ -16,13 +16,18 @@ describe('Teste de validação de aplicação de fingerprint em página', async 
         if (driver) driver.quit();
     });
 
-    it('Roda testes de fingerprint em página de teste e valida resultados', async () => {
+    it('Should run fingerprint tests on test page and validate results', async () => {
         await driver.get('https://bot.sannysoft.com/');
         await driver.wait(until.elementLocated(By.xpath('//*[@id="fp2"]')), 10000);
         await new Screenshot(driver).take('test');
         const tables = await driver.findElements(By.css('table'));
         await oldFingerPrintValidate(tables);
         await newFingerPrintValidate(tables);
+    });
+
+    it('Should clear cache folder', async () => {
+        ProxyServer.clearCache(1, 's');
+        expect(existsSync('/tmp/anyproxy/cache/')).to.be.false;
     });
 });
 
@@ -46,8 +51,8 @@ async function oldFingerPrintValidate(tables) {
                 failedTests.push({ name, result });
         }
     }
-    expect(failedTests, `[FALHA] Old FingerPrint: ${JSON.stringify(failedTests)}`).to.be.empty;
-    expect(passedTests.length, '[SUCESSO] Old FingerPrint').to.be.equal(11);
+    expect(failedTests, `[FAIL] Old FingerPrint: ${JSON.stringify(failedTests)}`).to.be.empty;
+    expect(passedTests.length, '[SUCCESS] Old FingerPrint').to.be.equal(11);
 }
 
 async function newFingerPrintValidate(tables) {
@@ -68,8 +73,8 @@ async function newFingerPrintValidate(tables) {
             failedTests.push(fingerResult);
     }
 
-    expect(failedTests, `[FALHA] New FingerPrint: ${JSON.stringify(failedTests)}`).to.be.empty;
-    expect(passedTests.length, '[SUCESSO] New FingerPrint').to.be.equal(20);
+    expect(failedTests, `[FAIL] New FingerPrint: ${JSON.stringify(failedTests)}`).to.be.empty;
+    expect(passedTests.length, '[SUCCESS] New FingerPrint').to.be.equal(20);
 }
 
 class Screenshot {
