@@ -75,12 +75,10 @@ class ProxyServer {
                     itens.forEach(file => {
                         const entryPath = join(dirPath, file);
                         const stat = statSync(entryPath);
-                        if (moment() > moment(stat.ctime).add(amount, keyTime)) {
-                            if (stat.isDirectory())
-                                rimraf(entryPath);
-                            else
-                                unlinkSync(entryPath);
-                        }
+                        if (stat.isDirectory())
+                            rimraf(entryPath);
+                        else if (moment() > moment(stat.ctime).add(amount, keyTime))
+                            unlinkSync(entryPath);
                     });
                     if (!readdirSync(dirPath).length)
                         rmdirSync(dirPath);
