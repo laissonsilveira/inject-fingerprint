@@ -54,7 +54,7 @@ async function oldFingerPrintValidate(tables) {
         }
     }
     expect(failedTests, `[FAIL] Old FingerPrint: ${JSON.stringify(failedTests)}`).to.be.empty;
-    expect(passedTests.length, '[SUCCESS] Old FingerPrint').to.be.equal(12);
+    expect(passedTests.length, '[SUCCESS] Old FingerPrint').to.be.greaterThanOrEqual(12);
 }
 
 async function newFingerPrintValidate(tables) {
@@ -101,5 +101,5 @@ async function newFingerPrintValidate(tables) {
     if (warnTests) __LOGGER_FINGERPRINT.warn(`[WARN] New FingerPrint: ${JSON.stringify(warnTests)}`);
 
     expect(failedTests, `[FAIL] New FingerPrint: ${JSON.stringify(failedTests)}`).to.be.empty;
-    expect(passedTests.length, '[SUCCESS] New FingerPrint').to.be.equal(20);
+    expect(passedTests.length, '[SUCCESS] New FingerPrint').to.be.greaterThanOrEqual(20);
 }
