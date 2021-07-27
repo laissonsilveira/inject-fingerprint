@@ -1,5 +1,5 @@
 const { join } = require('path');
-const { writeFile, existsSync, readFileSync } = require('fs');
+const { writeFile, existsSync, readFileSync, mkdirSync } = require('fs');
 
 const getHardwareConcurrency = () => {
     const hardware = [2, 4, 6, 8];
@@ -234,7 +234,7 @@ Object.defineProperty(HTMLDivElement.prototype, 'offsetHeight', {
 };
 
 const createFingerPrintScript = () => {
-    return `${readFileSync('./utils-finger-printer.js')}
+    return `${readFileSync(join(__dirname, './utils-finger-printer.js'))}
     ${bypassPlugins()}
     ${bypassChangeProperties()}
     ${bypassPermissions()}
@@ -245,6 +245,8 @@ const createFingerPrintScript = () => {
 };
 
 const getFingerPrintPath = (name, outDir) => {
+    if (!existsSync(outDir))
+        mkdirSync(outDir, { recursive: true });
     return join(outDir, `${name}.js`);
 };
 

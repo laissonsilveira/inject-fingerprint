@@ -1,8 +1,9 @@
 /*eslint require-yield: off*/
 const { loadFingerPrint } = require('./finger-print-builder');
+const { join } = require('path');
 
 module.exports = directory => {
-    const fingerPrint = loadFingerPrint('default', directory);
+    const fingerPrint = loadFingerPrint('default', join(directory, require('./package.json').version));
     return {
         summary: 'FingerPrint Scripts Injection ',
         *beforeSendResponse(requestDetail, responseDetail) {
