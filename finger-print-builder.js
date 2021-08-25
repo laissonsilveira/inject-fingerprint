@@ -111,13 +111,7 @@ this.changeProperty('navigator', 'platform', 'Linux x86_64');
 this.changeProperty('navigator', 'vendor', 'Google Inc.');
 this.changeProperty('navigator', 'appName', 'Netscape');
 this.changeProperty('screen', 'colorDepth', 24);
-if (!window.chrome) {
-    Object.defineProperty(window, 'chrome', {
-        get: function () {
-            return values
-        }
-    });
-}`;
+this.changeProperty('window', 'chrome', { runtime: {} });`;
 };
 
 const bypassWebdriver = () => {
