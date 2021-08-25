@@ -1,3 +1,4 @@
+'use strict';
 /*eslint require-yield: off*/
 const HttpsProxyAgent = require('https-proxy-agent');
 

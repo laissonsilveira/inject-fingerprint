@@ -1,3 +1,4 @@
+'use strict';
 const { join } = require('path');
 const { writeFile, existsSync, readFileSync, mkdirSync } = require('fs');
 
@@ -104,13 +105,19 @@ function changeProperty(parent, attribute, values) {
 this.changeProperty('navigator', 'languages', ${JSON.stringify(languages)})
 this.changeProperty('navigator', 'deviceMemory', ${getDeviceMemory()})
 this.changeProperty('navigator', 'hardwareConcurrency', ${getHardwareConcurrency()})
-this.changeProperty('navigator', 'chrome', { runtime: {}, });
+this.changeProperty('navigator', 'chrome', { runtime: {} });
 this.changeProperty('navigator', 'appCodeName', 'Mozilla');
 this.changeProperty('navigator', 'platform', 'Linux x86_64');
 this.changeProperty('navigator', 'vendor', 'Google Inc.');
 this.changeProperty('navigator', 'appName', 'Netscape');
-this.changeProperty('window', 'chrome', { runtime: {}, });
-this.changeProperty('screen', 'colorDepth', 24);`;
+this.changeProperty('screen', 'colorDepth', 24);
+if (!window.chrome) {
+    Object.defineProperty(window, 'chrome', {
+        get: function () {
+            return values
+        }
+    });
+}`;
 };
 
 const bypassWebdriver = () => {

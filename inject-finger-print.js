@@ -1,3 +1,4 @@
+'use strict';
 /*eslint require-yield: off*/
 const { loadFingerPrint } = require('./finger-print-builder');
 const { join } = require('path');

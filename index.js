@@ -1,3 +1,4 @@
+'use strict';
 const moment = require('moment');
 const AnyProxy = require('anyproxy');
 let internalProxy, additionalProxy;
