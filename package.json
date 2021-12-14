@@ -17,7 +17,7 @@
         "selenium-webdriver": "^4.0.0-beta.4"
     },
     "scripts": {
-        "test": "node_modules/mocha/bin/mocha test/fingerprint.test.js --timeout 999999",
+        "test": "npx mocha test/fingerprint.test.js --timeout 999999",
         "preversion": "npm test && git add .",
         "publish-patch": "npm version patch && npm publish",
         "publish-minor": "npm version minor && npm publish",
