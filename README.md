@@ -101,11 +101,24 @@ Level log of module `inject-fingerprint`. To logging action Ex: [silly, debug, w
 
 ### start()
 
-Start the proxy
+Start proxy server
 
 ### close()
 
-Close the proxy
+Terminate the proxy server
+
+### clearCache(amount, keyTime)
+
+Remove proxy server caches
+
+```js
+/**
+ *
+ * @param {Number} [amount=1] Amount of time to delete
+ * @param {String} [keyTime='days'] Key of what time to delete (https://momentjs.com/docs/#/manipulating/add/)
+ * @example clearCache(30, 'minutes')
+ */
+```
 
 ### DriverBuilder(options?)
 

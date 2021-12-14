@@ -1,29 +1,35 @@
-const moment = require('moment');
-const { writeFileSync } = require('fs');
-const { join } = require('path');
+const { existsSync } = require('fs');
 const { expect } = require('chai');
 const { By, until } = require('selenium-webdriver');
 const ProxyServer = new (require('../index'))({ logLevel: 'silly' });
-let driver;
+let driver, tables;
 
-describe('Teste de validação de aplicação de fingerprint em página', async () => {
+describe('Page fingerprint application validation test', async () => {
 
-    before(() => {
+    before(async () => {
         ProxyServer.start();
         driver = ProxyServer.DriverBuilder(ProxyServer.options).build();
+        await driver.get('https://bot.sannysoft.com/');
+        await driver.wait(until.elementLocated(By.xpath('//*[@id="fp2"]')), 10000);
+        tables = await driver.findElements(By.css('table'));
     });
+
     after(() => {
         ProxyServer.close();
         if (driver) driver.quit();
     });
 
-    it('Roda testes de fingerprint em página de teste e valida resultados', async () => {
-        await driver.get('https://bot.sannysoft.com/');
-        await driver.wait(until.elementLocated(By.xpath('//*[@id="fp2"]')), 10000);
-        await new Screenshot(driver).take('test');
-        const tables = await driver.findElements(By.css('table'));
+    it('Should run old fingerprint tests on test page and validate results', async () => {
         await oldFingerPrintValidate(tables);
+    });
+
+    it('Should run new fingerprint tests on test page and validate results', async () => {
         await newFingerPrintValidate(tables);
+    });
+
+    it('Should clear cache folder', async () => {
+        ProxyServer.clearCache(1, 's');
+        expect(existsSync('/tmp/anyproxy/cache/')).to.be.false;
     });
 });
 
@@ -43,67 +49,57 @@ async function oldFingerPrintValidate(tables) {
                 passedTests.push({ name, result });
 
             const failedEls = await line.findElements(By.className('failed'));
-            if (failedEls.length != 0 && !name.includes('Hairline Feature'))//Bypass desnessário
+            if (failedEls.length != 0)
                 failedTests.push({ name, result });
         }
     }
-    expect(failedTests, `[FALHA] Old FingerPrint: ${JSON.stringify(failedTests)}`).to.be.empty;
-    expect(passedTests.length, '[SUCESSO] Old FingerPrint').to.be.equal(11);
+    expect(failedTests, `[FAIL] Old FingerPrint: ${JSON.stringify(failedTests)}`).to.be.empty;
+    expect(passedTests.length, '[SUCCESS] Old FingerPrint').to.be.greaterThanOrEqual(12);
 }
 
 async function newFingerPrintValidate(tables) {
     const newFingerprintLines = await tables[1].findElements(By.css('tr'));
-    const passedTests = [], failedTests = [];
+    const passedTests = [], warnTests = [], failedTests = [];
     for (const line of newFingerprintLines) {
         const tds = await line.findElements(By.css('td'));
         const key = await tds[0].getText();
-        if (key === 'HEADCHR_IFRAME') continue;//Sem bypass por enquanto
         const status = await tds[1].getText();
         const value = await tds[2].getText();
         const fingerResult = { key, status, value };
 
         if (status == 'ok')
             passedTests.push(fingerResult);
-
+        else if (status == 'WARN')
+            warnTests.push(fingerResult);
         else
             failedTests.push(fingerResult);
     }
 
-    expect(failedTests, `[FALHA] New FingerPrint: ${JSON.stringify(failedTests)}`).to.be.empty;
-    expect(passedTests.length, '[SUCESSO] New FingerPrint').to.be.equal(20);
-}
+    const explanation = `
+    PHANTOM_UA: Detect PhantomJS user agent
+    PHANTOM_PROPERTIES: Test the presence of properties introduced by PhantomJS
+    PHANTOM_ETSL: Runtime verification for PhantomJS
+    PHANTOM_LANGUAGE: Use navigator.languages to detect PhantomJS
+    PHANTOM_WEBSOCKET: Analyze the error thrown when creating a websocket
+    MQ_SCREEN: Use media query related to the screen
+    PHANTOM_OVERFLOW: Analyze error thrown when a stack overflow occurs
+    PHANTOM_WINDOW_HEIGHT: Analyze window screen dimension
+    HEADCHR_UA: Detect Chrome Headless user agent
+    WEBDRIVER: Test the presence of webriver attributes
+    HEADCHR_CHROME_OBJ: Test the presence of the window.chrome object
+    HEADCHR_PERMISSIONS: Test permissions management
+    HEADCHR_PLUGINS: Verify the number of plugins
+    HEADCHR_IFRAME: Test presence of Chrome Headless using an iframe
+    CHR_DEBUG_TOOLS: Test if debug tools are opened
+    SELENIUM_DRIVER: Test the presence of Selenium drivers
+    CHR_BATTERY: Test the presence of battery
+    CHR_MEMORY: Verify if navigator.deviceMemory is consistent
+    TRANSPARENT_PIXEL: Verify if a canvas pixel is transparent`;
 
-class Screenshot {
+    __LOGGER_FINGERPRINT && __LOGGER_FINGERPRINT.info(`[proxy-server] Explanation test new fingerprint: '${explanation}'`);
 
-    constructor(driver) {
-        this.driver = driver;
-    }
+    if (warnTests) __LOGGER_FINGERPRINT.warn(`[WARN] New FingerPrint: ${JSON.stringify(warnTests)}`);
 
-    /**
-     * @param {String} path Path to save photo
-     * @returns {Promise}
-     */
-    async take(path = './') {
-        try {
-            await this._setBackground();
-            const image = await this.driver.takeScreenshot();
-            const fileName = moment().format('YYYY-MM-DD_HH-mm-ss') + '.png';
-            writeFileSync(join(path, fileName), image.replace(/^data:image\/png;base64,/, ''), 'base64');
-            __LOGGER_FINGERPRINT.info(`[screenshot] Screenshot => '${fileName}'`);
-            return fileName;
-        } catch (err) {
-            __LOGGER_FINGERPRINT.warn('[screenshot] Não foi possível salvar screenshot: ' + err.message);
-        }
-    }
-
-    async _setBackground() {
-        /* istanbul ignore next */
-        await this.driver.executeScript(function () {
-            const style = document.createElement('style'),
-                text = document.createTextNode('body { background: #fff }');
-            style.setAttribute('type', 'text/css');
-            style.appendChild(text);
-            document.head.insertBefore(style, document.head.firstChild);
-        });
-    }
+    expect(failedTests, `[FAIL] New FingerPrint: ${JSON.stringify(failedTests)}`).to.be.empty;
+    expect(passedTests.length, '[SUCCESS] New FingerPrint').to.be.greaterThanOrEqual(20);
 }
